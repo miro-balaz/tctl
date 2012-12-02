@@ -1,0 +1,128 @@
+PROBLEM STATEMENT
+Fox Jiro came to a flower shop to buy flowers.
+The flowers in the shop are arranged in some cells of a rectangular grid.
+The layout of the grid is given as a vector <string> flowers.
+There are two types of flowers in the shop: lilies and petunias.
+If the j-th cell of the i-th row of the grid contains a flower, then the j-th character of the i-th element of flowers will be 'L' if it is a lily, and 'P' if it is a petunia.
+(All indices in the previous sentence are 0-based.)
+If the particular cell is empty, the corresponding character will be '.' (a period).
+
+In order to buy flowers, Jiro has to draw two disjoint rectangles on this grid and buy all the flowers which lie inside the rectangles.
+Of course, the sides of the rectangles must be on cell boundaries.
+(Therefore, the sides of the rectangles will necessarily be parallel to the coordinate axes.)
+The rectangles are allowed to touch, but they may not intersect.
+In other words, the rectangles may share a common boundary, but no cell may belong to both rectangles.
+Each of the two rectangles must contain at least one cell.
+
+Jiro wants to buy approximately the same number of lilies and petunias.
+More precisely, the positive difference between the number of lilies and petunias must be at most maxDiff, inclusive.
+Given that constraint, Jiro wants to buy as many flowers as possible.
+
+You are given the vector <string> flowers and the int maxDiff.
+Return the maximum possible number of flowers Jiro can buy in this situation.
+If there is no valid way to buy flowers, return -1 instead.
+
+DEFINITION
+Class:FoxAndFlowerShopDivOne
+Method:theMaxFlowers
+Parameters:vector <string>, int
+Returns:int
+Method signature:int theMaxFlowers(vector <string> flowers, int maxDiff)
+
+
+CONSTRAINTS
+-flowers will contain between 2 and 30 elements, inclusive.
+-Each element of flowers will contain the same number of characters.
+-Each element of flowers will contain between 1 and 30 characters, inclusive.
+-Each character in flowers will be either 'L', 'P', or '.'.
+-maxDiff will be between 0 and 900, inclusive.
+
+
+EXAMPLES
+
+0)
+{"LLL",
+ "PPP",
+ "LLL"}
+1
+
+Returns: 7
+
+Jiro cannot buy all the flowers, because the difference between the number of lilies and the number of petunias would be too large.
+The best he can do is to buy 7 flowers: 4 lilies and 3 petunias.
+One way of doing so is to draw two rectangles: (0,0)-(1,2) and (2,0)-(2,0).
+Note that (r1,c1)-(r2,c2) denotes a rectangle with cell (r1,c1) in the top left corner and cell (r2,c2) in the bottom right corner.
+(All indices are 0-based.)
+
+1)
+{"LLL",
+ "PPP",
+ "LLL"}
+0
+
+Returns: 6
+
+This time Jiro is required to buy the same number of lilies and petunias.
+Therefore the best he can do is to buy three of each kind.
+
+2)
+{"...",
+ "...",
+ "..."}
+3
+
+Returns: 0
+
+There are no flowers.
+
+3)
+{"LLPL.LPP",
+ "PLPPPPLL",
+ "L.P.PLLL",
+ "LPL.PP.L",
+ ".LLL.P.L",
+ "PPLP..PL"}
+2
+
+Returns: 38
+
+
+
+4)
+{"LLLLLLLLLL",
+ "LLLLLLLLLL",
+ "LLLLLLLLLL",
+ "LLLLLLLLLL",
+ "LLLLLLLLLL"}
+0
+
+Returns: -1
+
+Here it is impossible to draw the two rectangles. Regardless of how Jiro draws them, he will surely buy more lilies than petunias, and that is not allowed.
+
+5)
+{"LLLP..LLP.PLL.LL..LP",
+ "L.PL.L.LLLL.LPLLPLP.",
+ "PLL.LL.LLL..PL...L..",
+ ".LPPP.PPPLLLLPLP..PP",
+ "LP.P.PPL.L...P.L.LLL",
+ "L..LPLPP.PP...PPPL..",
+ "PP.PLLL.LL...LP..LP.",
+ "PL...P.PPPL..PLP.L..",
+ "P.PPPLPLP.LL.L.LLLPL",
+ "PLLPLLP.LLL.P..P.LPL",
+ "..LLLPLPPPLP.P.LP.LL",
+ "..LP..L..LLPPP.LL.LP",
+ "LPLL.PLLPPLP...LL..P",
+ "LL.....PLL.PLL.P....",
+ "LLL...LPPPPL.PL...PP",
+ ".PLPLLLLP.LPP...L...",
+ "LL...L.LL.LLLPLPPPP.",
+ "PLPLLLL..LP.LLPLLLL.",
+ "PP.PLL..L..LLLPPL..P",
+ ".LLPL.P.PP.P.L.PLPLL"}
+9
+
+Returns: 208
+
+
