@@ -1,0 +1,51 @@
+//{{{b
+
+//}}}e
+#line 5 "XorGame.cpp"
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <set>
+#include <cctype>
+#include <sstream>
+#include <bitset>
+#include <iostream>
+
+using namespace std;
+
+#define REP(i,n) for(int i=0;i<(int)n;++i)
+
+class XorGame {
+	public:
+//{{{b
+ 
+// BEGIN CUT HERE
+	public:
+	void run_test(int Case) { if ((Case == -1) || (Case == 0)) test_case_0(); if ((Case == -1) || (Case == 1)) test_case_1(); if ((Case == -1) || (Case == 2)) test_case_2(); if ((Case == -1) || (Case == 3)) test_case_3(); if ((Case == -1) || (Case == 4)) test_case_4(); }
+	private:
+	template <typename T> string print_array(const vector<T> &V) { ostringstream os; os << "{ "; for (typename vector<T>::const_iterator iter = V.begin(); iter != V.end(); ++iter) os << '\"' << *iter << "\","; os << " }"; return os.str(); }
+	void verify_case(int Case, const int &Expected, const int &Received) { cerr << "Test Case #" << Case << "..."; if (Expected == Received) cerr << "PASSED" << endl; else { cerr << "FAILED" << endl; cerr << "\tExpected: \"" << Expected << '\"' << endl; cerr << "\tReceived: \"" << Received << '\"' << endl; } }
+	void test_case_0() { string Arg0 = "10101"; string Arg1 = "11011"; int Arg2 = 1; verify_case(0, Arg2, play(Arg0, Arg1)); }
+	void test_case_1() { string Arg0 = "001100"; string Arg1 = "001100"; int Arg2 = 0; verify_case(1, Arg2, play(Arg0, Arg1)); }
+	void test_case_2() { string Arg0 = "110"; string Arg1 = "011"; int Arg2 = 2; verify_case(2, Arg2, play(Arg0, Arg1)); }
+	void test_case_3() { string Arg0 = "10101010"; string Arg1 = "11111111"; int Arg2 = -1; verify_case(3, Arg2, play(Arg0, Arg1)); }
+	void test_case_4() { string Arg0 = "001011010101101"; string Arg1 = "001000101101101"; int Arg2 = 1; verify_case(4, Arg2, play(Arg0, Arg1)); }
+
+// END CUT HERE
+
+//}}}e
+
+
+	int play(string S, string E) ;
+};
+
+int XorGame::play(string S, string E){
+   
+}
+//{{{b
+int main() {
+  XorGame ___test;
+  ___test.run_test(-1);
+}
+//}}}e

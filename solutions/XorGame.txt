@@ -1,0 +1,64 @@
+PROBLEM STATEMENT
+
+You are given two strings: the start string S and the end string E. Both strings have the same length, and each of their characters is either '0' or '1'. Two players A and B play the game that starts with the string S. Player A and player B take alternating turns, with player A going first. In each of her turns, player A picks a contiguous subsequence of the current string and flips it - changing all '0's to '1's and vice versa. (She is allowed to pick an empty subsequence, which results in her not changing the current string.) In each of his turns, player B may pick a character of the current string and flip it. (He is allowed not to pick any character and keep the current string unchanged.)
+
+
+
+When the string turns into E, player A wins. If player A can win the game, return the minimum possible number of turns A has to take. (We assume that if player A can ensure a win, then player B uses a strategy that postpones his loss for as long as possible.) If player A cannot win the game, return -1 instead.
+
+
+DEFINITION
+Class:XorGame
+Method:play
+Parameters:string, string
+Returns:int
+Method signature:int play(string S, string E)
+
+
+CONSTRAINTS
+-S will contain between 1 and 50 characters, inclusive.
+-S and E will contain the same number of characters.
+-Each character in S and E will be '0' or '1'.
+
+
+EXAMPLES
+
+0)
+"10101"
+"11011"
+
+Returns: 1
+
+Player A can win in the first turn by flipping characters 1 through 3 (0-based indices).
+
+1)
+"001100"
+"001100"
+
+Returns: 0
+
+Player A wins immediately after the game begins.
+
+2)
+"110"
+"011"
+
+Returns: 2
+
+In this case, player A cannot win in her first turn. However, she can start by flipping characters 1 and 2, producing the string "101". Regardless of what player B does (and even if he chooses not to flip anything), she will then have winning move in her second turn.
+
+3)
+"10101010"
+"11111111"
+
+Returns: -1
+
+
+
+4)
+"001011010101101"
+"001000101101101"
+
+Returns: 1
+
+

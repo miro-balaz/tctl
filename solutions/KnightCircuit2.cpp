@@ -39,22 +39,14 @@ class KnightCircuit2 {
 };
 
 int KnightCircuit2::maxSize(int w, int h){
-if(h>w) swap(w,h);
+if(h>w) swap(h,w);
 if(h==1) return 1;
+if(h>3) return h*w;
 if(h==2) {
-  return (w-1)/2+1;
+  return (w+1)/2;
 }
-if(h==3) {
-  if(w==3) {
-    return 8;
-  }
-  if(w>=4) return h*w;
-
-}
-if(h>=4) {
-  return w*h;
-}
-return -1;
+if(w==3) return 8;
+return w*h;
 }
 //{{{b
 int main() {

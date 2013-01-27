@@ -40,33 +40,9 @@ class AlternateColors2 {
 
 	long long countWays(int n, int k) ;
 };
-typedef long long num;
-long long AlternateColors2::countWays(int n_, int k_){
-   num rval=0;
-   num k=k_;
-   num n=n_;
-   if(k%3==1) {
-     num m=n-k/3-k/3-(k+2)/3;
-     REP(i,m+1) {
-       rval+=(m-i+1);
-     }
-   }
-   REP(i, (k+2)/3){  //3*i<k
-     num m=n-3*i;
-     num new_k = k-3*i;
-     if(new_k>1) {  //excludes first case
-       if(new_k%2==1 ) {  //necessery condition
-         m -= (new_k+1)/2 + (new_k+1)/2; // for 3 we need at least 2 of each color
-         if(m>=0) {  // trivial condition
-           rval+=(m+1)*2;  
-         }         
-     }
-     num x= (new_k-1)/2+1;//  new_k; //*2-1
-     x=x*2-1;
-     rval+=x;
-     }
-   }
-   return rval;
+
+long long AlternateColors2::countWays(int n, int k){
+   
 }
 //{{{b
 int main() {
