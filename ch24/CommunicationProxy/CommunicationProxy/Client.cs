@@ -6,13 +6,17 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 namespace CommunicationProxy {
+    public class ClientConnectedEventArgs {
+
+    }
+    public delegate void ClientConnectedHandler(object sender, ClientConnectedEventArgs e);
     public class Client {
         Socket socket_;
         ProxyServer server_;
         SingleConsumerQueue<byte[]> send_items_ =  new SingleConsumerQueue<byte[]>();
         private bool end_ = false;
         public event EventHandler ClientDisconnectd;
-        public event EventHandler ClientConnected;
+        public event ClientConnectedHandler ClientConnected;
         
         public void DataArrived(byte[] data) {
             send_items_.Produce(data);
@@ -29,7 +33,7 @@ namespace CommunicationProxy {
         private void OnConnect() {
             lock (this) {
                 if (ClientConnected != null) {
-                    ClientConnected(this, new EventArgs());
+                    ClientConnected(this, new ClientConnectedEventArgs());
                 }
             }
         }
