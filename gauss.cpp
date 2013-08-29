@@ -2,6 +2,11 @@ double M[110][110];
 void solve_gauss(int n, int m) {
     vector<int> vars;
     REP(i,n)vars.push_back(i);
+    /*
+    REP(i,n) {
+      REP(j,m) cout<<M[i][j]<<" ";
+      cout<<endl;
+    }*/
     REP(i,n) {
         // find row with maximal value
         double x=M[i][i];
@@ -24,9 +29,15 @@ void solve_gauss(int n, int m) {
             M[j][i] = 0.0;
             M[j][m-1] -= c * M[i][m-1];
         }
+        M[i][m-1]/=M[i][i];
+        M[i][i]/=M[i][i];
     }
+//    cout<<"after"<<endl;
+  //  REP(i,n) {
+    //  REP(j,m) cout<<M[i][j]<<" ";
+     // cout<<endl;
+    //}
     vector<double> rval(n);
     REP(i,n) rval[vars[i]] = M[i][m-1];
     REP(i,n) M[i][m-1] = rval[i];
 }
-
