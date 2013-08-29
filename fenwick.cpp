@@ -1,6 +1,7 @@
-template <typename T>
 //=FenwickTree
+template<typename T>
 class FenwickTree {
+    public:
   vector<T> c;
   int max_value_;
   int start_value_;
@@ -17,40 +18,41 @@ class FenwickTree {
  // }
   // Returns sum from begin to idx inclusively, if idx isoutside the bounds it will return 0 or sum for max value depending of the idx.
   T get_sum(int idx) {
-    idx -= start_value_;
-    //assert(idx>=0 && idx<max_value_);
+    idx-=start_value_;
     if (idx<1) return 0;
-    if (idx>=max_value_) idx = max_value_ - 1;
-    return get_sum_no_check(idx);
+    if (idx>max_value_) idx = max_value_;
+    //assert(idx>=0 && idx<=max_value_);
+    return get_cummulative_no_check(idx);
   }
 
-  // The actual implementation of get_sum
-  inline T get_sum_no_check(int idx) {
-    int rval=0;
-    while(idx) {
-      rval += c[idx];
+  inline T get_cummulative_no_check(int idx) {
+    T rval = 0;
+    while(idx > 0) {
+      //assert(idx<=max_value_);
+      rval+=c[idx];
       idx -= idx & (-idx);
     }
     return rval;
   }
+
+  // increases the frequency for idx
+  void add(int idx, int val) {
+    idx-=start_value_;
+    if (idx < 1) return;
+    if (idx > max_value_) idx = max_value_ ;
+    //assert(idx>=0 && idx<=max_value_);
+    update_no_check(idx, val);
+
+  }
+
   // The actual implementation of add
-  inline void add_no_check(int idx, T val) {
-    while (idx < max_value_){
+  inline void update_no_check(int idx, int val) {
+    while (idx <= max_value_){
+      //assert(idx>=0);
       c[idx] += val;
       idx += (idx & -idx);
     }
   }
-
-  // increases the frequency for idx
-  void add(int idx, T val) {
-    idx-=start_value_;
-    //assert(idx>=0 && idx<max_value_);
-    if (idx < 1) return ;
-    if (idx >= max_value_) idx = max_value_ - 1;
-    add_no_check(idx, val);
-
-  }
-
   // The slower version of getting value for single element
   T get_single(int idx) {
     return get_sum(idx)-get_sum(idx-1);
