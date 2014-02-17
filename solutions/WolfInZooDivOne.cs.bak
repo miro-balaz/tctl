@@ -1,0 +1,26 @@
+#line 5 "WolfInZooDivOne.cpp"
+#include <string>
+#include <vector>
+#include <map>
+#include<algorithm>
+#include <set>
+#include <sstream>
+#include <iostream>
+
+using namespace std;
+
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+
+class WolfInZooDivOne {
+	public:
+
+	int count(int N, vector <string> L, vector <string> R); 
+};
+int WolfInZooDivOne::count(int N, vector <string> L, vector <string> R) {
+  
+}
+
+
+// Powered by FileEdit
+// Powered by TZTester 1.01 [25-Feb-2003]
+// Powered by CodeProcessor

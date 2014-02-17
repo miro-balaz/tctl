@@ -32,16 +32,20 @@ class IntervalTree{
 #define PARENT(x) (((x)-1)/2)
 #define LEFT(x) ((x)*2+1)
 #define RIGHT(x) ((x)*2+2)
+    // Assumes update_max was called for childre
     inline void update_max(int x) {
       func[x] =   x >= first?propagate[x]:max(func[LEFT(x)], func[RIGHT(x)]);
+
     }
     inline void push(int x) {
-      if(propagate[x]) {
+      if(propagate[x]) {  // zero is special value
         propagate[LEFT(x)] = propagate[x];
         propagate[RIGHT(x)] =  propagate[x];
         propagate[x]=0;
       }
     }
+    // Computes "path"( actually path forked path), then call push in reverse order on each node in path
+    // Ensures, that there is nothing to be propagated to left and right.
     void push_to(int left, int right) {
       int path[62],path_length=0;
 
@@ -55,6 +59,8 @@ class IntervalTree{
       }
       for(int i=path_length-1;i>=0;--i) push(path[i]);
     }
+
+    // calls update_max bottom up
     void recompute_to(int left, int right) {
       update_max(left);
       update_max(right);
@@ -66,8 +72,19 @@ class IntervalTree{
           update_max(right);
         }
       }
+
     }
 
+// possible combination : set, get max, add get max, 
+// for bar union .. i increase interval and then count how many are bigger than zero     
+// calls push to - ensuring nothing everythin that had to be propagated to left-right will be there 
+//  until we converge to one point, for left end:if the parent of node does not span to the left of it, go to the parrent(possibly in future it will cover interval) else 
+// then calls recompute - 
+// we are setting propagate value
+// paramerter: OP1(propagate[x]=value)
+    inline void OP1(const int node, const int value) {
+      propagate[node] = value;
+    }
     void update(int left, int right, int value) {
       push_to(left, right);  // proppagate, so now put values will not be rewritteny
       int left_orig=left, right_orig=right;
@@ -76,19 +93,19 @@ class IntervalTree{
         if(LEFT(parent) == left) {
           left = parent;
         } else {
-          propagate[left] = value; // APPLY
-          left = parent+1;
+          OP1(left, value);
+          left = parent+1;  // Note: In case left is righmost node in any row, the parent of right will clearly the same
         }
         parent = PARENT(right);
         if (RIGHT(parent) == right) {
           right = parent;
         } else{
-          propagate[right] = value;  // APPLY
+          OP1(right, value);
           right = parent - 1;
         }
       }
-      if(left==right) {
-        propagate[left]=value; // APPLY
+      if(left==right) {  // what if left jumps nad right ascends
+        OP1(left, value);
       }
       recompute_to(left_orig, right_orig);
 

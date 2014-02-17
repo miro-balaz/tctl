@@ -1,0 +1,65 @@
+#line 5 "ArcadeManao.cpp"
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <set>
+#include <cctype>
+#include <sstream>
+#include <bitset>
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+#define REP(i,n) for(int i=0;i<(int)n;++i)
+
+class ArcadeManao {
+	public:
+
+
+	int shortestLadder(vector <string> level, int coinRow, int coinColumn) ;
+};
+int X[50][50];
+int ArcadeManao::shortestLadder(vector <string> level, int coinRow, int coinColumn){
+  int n=level.size();
+  int m=level[0].size();
+  REP(ladder,n+1) {
+    REP(i,n) REP(j,m) X[i][j]=0;
+    queue<int> q;
+    q.push(n-1);
+    q.push(0);
+    X[n-1][0]=1;
+  
+    while(!q.empty()) {
+      int y=q.front();q.pop();
+      int x=q.front();q.pop();
+      vector<pair<int, int > >v;
+      v.push_back(make_pair(y,x+1));
+      v.push_back(make_pair(y,x-1));
+      REP(z, ladder) {
+        v.push_back(make_pair(y-z-1,x));
+        v.push_back(make_pair(y+z+1,x));
+      }
+      REP(i, v.size()) {
+        pair<int, int> p=v[i];
+        int ny=p.first;
+        int nx=p.second;
+        if(nx>=0 && ny>=0 && nx<m && ny<n && level[ny][nx]=='X' && !X[ny][nx]) {
+          X[ny][nx]=1;
+          q.push(ny);
+          q.push(nx);
+
+        }
+      }
+    }
+    if(X[coinRow-1][coinColumn-1]) return ladder;
+
+  } 
+ return 0; 
+}
+
+
+// Powered by FileEdit
+// Powered by TZTester 1.01 [25-Feb-2003]
+// Powered by CodeProcessor

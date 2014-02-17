@@ -1,0 +1,59 @@
+PROBLEM STATEMENT
+The king of Byteland wants to introduce a coin system for the country. He would like to introduce coins of exactly N different values and each value should be a positive integer. 
+
+You are given a vector <int> maxSum containing N constraints. The king considers a coin system to be bad if there is at least one K such that 1 <= K <= N and the sum of some K different coin values is strictly greater than maxSum[K-1]. For example when N = 5 and maxSum = {7, 11, 16, 17, 30} then the coin system {1, 2, 3, 5, 7} is a bad choice as 5+7=12 (> maxSum[1]). The coin system {1, 3, 4, 5, 6} is also bad as 3+4+5+6=18 (> maxSum[3]).  But the coin system {1, 2, 4, 5, 6} is not a bad choice.
+
+Given the vector <int> maxSum containing N elements, find the number of different ways in which the king can choose a system of N different coin values that is not bad. Return the answer modulo 1,000,000,007. Two choices are considered different if there is at least one coin value which appears in one choice but doesn’t appear in the other.
+
+DEFINITION
+Class:CoinsOfByteland
+Method:countCoinSystems
+Parameters:vector <int>
+Returns:int
+Method signature:int countCoinSystems(vector <int> maxSum)
+
+
+CONSTRAINTS
+-maxSum will contain between 1 and 5 elements, inclusive.
+-For each i between 1 and N-1, inclusive (where N is the number of elements in maxSum), maxSum[i] will be greater than maxSum[i-1].
+-Each element of maxSum will be between 1 and 1,000,000,000, inclusive.
+
+
+EXAMPLES
+
+0)
+{7, 11, 15, 18, 20}
+
+Returns: 7
+
+The choices of coin systems which are not bad for these constraints are:
+
+{1,2,3,4,5}
+{1,2,3,4,6}
+{1,2,3,4,7}
+{1,2,3,5,6}
+{1,2,4,5,6}
+{1,3,4,5,6}
+{2,3,4,5,6}
+
+
+1)
+{10, 19}
+
+Returns: 45
+
+All possible pairs of values between 1 and 10 are valid coin system here.
+
+2)
+{10000}
+
+Returns: 10000
+
+All values between 1 and 10000 are valid.
+
+3)
+{1326549, 3212423, 6546565, 8785456}
+
+Returns: 546494632
+
+

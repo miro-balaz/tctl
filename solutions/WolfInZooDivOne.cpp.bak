@@ -1,0 +1,15 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+public class WolfInZooDivOne {
+	public int count(int N, string[] L, string[] R) {
+		$CARETPOSITION$
+	}
+}
+
+
+// Powered by FileEdit
+// Powered by TZTester 1.01 [25-Feb-2003]
+// Powered by CodeProcessor
