@@ -137,6 +137,8 @@ class FenwickTree2 {
     }
 };
 //#
+
+// This tree supports range updates, and range sum
 template<typename T>
 class IntervalFenwickTree {
   public:
