@@ -1,0 +1,70 @@
+#include<iostream>
+#include<vector>
+#include<set>
+#include<queue>
+#include<algorithm>
+#include<map>
+#include<string>
+
+using namespace std;
+#define REP(i,n) for(int i=0;i<(int)n;++i)
+typedef pair<int, int> pi;
+vector<vector<pi> > g1,g2;
+void dijkstra(const vector<vector<pi> > &g, vector<int> &dist, int source) {
+  int n=g.size();
+  REP(i,n) dist[i]=(int)1e9+1;
+  vector<int> seen(n);
+  priority_queue<pair<int, int> > Q;
+  dist[source]=0;
+  Q.push(pi(0, source));
+  while(!Q.empty()) {
+    pi v=Q.top();Q.pop();
+    int x=v.second;
+    if(seen[x]) continue;
+    seen[x]=1;
+    REP(i, g[x].size()) {
+      pi y=g[x][i];
+      if(dist[x]+y.second>=dist[y.first]) continue;
+      dist[y.first] = dist[x] + y.second;
+      Q.push(pi(-dist[y.first],y.first));
+    }
+  }
+}
+int main() {
+int a,b,n,m;
+cin>>n>>m>>a>>b;--a;--b;
+g1.resize(n);g2.resize(n);
+vector<pair< pi, pi> > hrany;
+REP(i,m) {
+  int x,y,d,c;
+  cin>>x>>y>>d>>c;
+  --x;--y;
+  g1[x].push_back(pi(y,d));
+  g2[y].push_back(pi(x,d));
+  hrany.push_back(pair<pi,pi>(pi(x,y), pi(d,c)));
+}
+vector<int> dist1(n), dist2(n);
+dijkstra(g1,dist1,a);
+dijkstra(g2, dist2, b);
+vector<pair<int, int> > Q;
+int q;cin>>q;
+REP(i,q) {
+  int x;cin>>x;
+  Q.push_back(pi(x, i));
+}
+sort(Q.begin(), Q.end());
+vector<int> result(q);
+REP(i,hrany.size()) {
+  pi h=hrany[i].first;
+  pi c=hrany[i].second;
+  int par=dist1[h.first]+dist2[h.second]+c.first;
+  int cost=c.second;
+  int start=lower_bound(Q.begin(), Q.end(), pi(par,-1))-Q.begin();
+  if(start<result.size())result[start]+=cost;
+}
+
+REP(i,q) if(i)result[i]+=result[i-1];
+vector<int> ans(n);
+REP(i,q) ans[Q[i].second]=result[i];
+REP(i,q) cout<<ans[i]<<endl;
+}

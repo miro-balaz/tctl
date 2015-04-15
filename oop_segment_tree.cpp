@@ -10,36 +10,47 @@
 using namespace std;
 #define REP(i,n) for(int i=0;i<(int)n;++i)
 
-
-inline void MV(int &a, int b) {
-  a=max(a,b);
-}
 #define N 500010
 int start[N], end[N];
+int F1_neutral=0;
+int F1(int a, int b){
+    return a+b;
+  }
+int F2_neutral=0;
+int F2(int a, int b) {
+  return b;
+}
 
 class Node{
   public:
   int value_propagate_;
-  int precomputed_value;  // This is also server as value in leaf nodes
+  int precomputed_value;  // This is also serves as value in leaf nodes
   // precomputed values never includes what is at current node to be propagated
   // so you need to call real_value()
   // if it was, we would have to call update_precomputed each time we alter propagation
+  // is not called for leaves
+  Node(): precomputed_value(F1_neutral),value_propagate_(F2_neutral){}
+
   void update_precomputed(const Node &a, const Node &b) {
-    precomputed_value = a.real_func()+b.real_func();
+    precomputed_value = F1(a.real_func(),b.real_func());
+  }
+  void compute_constants_and_precomputed(const Node &a, const Node &b){
+    update_precomputed(a,b);
+    // same as update_precomputed but called only at start(so things that are constant
   }
 
   bool propagation_required() const {
-    return value_propagate_!=-1;
+    return value_propagate_!=F2_neutral; 
   }
 
   bool reset_propagation() {
-    value_propagate_=-1;
+    value_propagate_ = F2_neutral;
   }
 
   void propagate_to(Node &a, Node &b) {
     if(! propagation_required()) return;
-    a.value_propagate_ = value_propagate_;
-    b.value_propagate_ = value_propagate_;
+    a.value_propagate_ = F2(a.value_propagate_, value_propagate_);  
+    b.value_propagate_ = F2(b.value_propagete_, value_propagate_);
     reset_propagation();
   }
   int real_func() const{
@@ -60,7 +71,7 @@ class SetValueMutation:public Mutation {
     int value_;
   public :
     SetValueMutation(int x) :value_(x){}
-    virtual void mutate(Node &node) const {node.value_propagate_=value_;}
+    virtual void mutate(Node &node) const {node.value_propagate_=F2(node.value_propagate_, value_);}
 };
 class ValueBuilder {
   public:
@@ -70,9 +81,9 @@ class ValueBuilder {
 class SumBuilder:public ValueBuilder{
   public:
   int sum;
-  SumBuilder():sum(0){}
+  SumBuilder():sum(F1_neutral){}
   virtual void add(const Node &node) {
-    sum += node.real_func();
+    sum = F1(sum,  node.real_func());
   }
 };
 
@@ -89,6 +100,7 @@ class IntervalTree{
       leaves=n;
     }
     virtual T getInitial(int index) {
+      // This must be overriden to initialize T with good values
       return T();
     }
     void initialize(bool keep_default) {
@@ -112,11 +124,14 @@ class IntervalTree{
     // update max would have to be called each time you call propagate but also on children
     // but update max would become simpler it would be only G', not two times F'
     // Idea: after we call push_to we call update max
-    inline void update_max(int x) {
-      tree[x].update_precomputed(tree[LEFT(x)], tree[RIGHT(x)]);
+    inline void update_max(int x) { // TO DO find why this was called on nodes
+      if (x<first) tree[x].update_precomputed(tree[LEFT(x)], tree[RIGHT(x)]);
+    }
+    inline void init_constant(int x) {
+      tree[x].compute_constants_and_precomputed(tree[LEFT(x)], tree[RIGHT(x)]);
     }
     void init_precomputed() {
-      for(int i=first-1;i>=0;--i) update_max(i);
+      for(int i=first-1;i>=0;--i) init_constant_and_precomputed(i);  // or mayb
     }
 
     // Is never called on last level
@@ -186,11 +201,6 @@ class IntervalTree{
       recompute_to(left_orig, right_orig);
 
     }
-    // JUST calls update
-    void set_value(int left, int right, int value) {
-      SetValueMutation mutation(value);
-      mutate_interval(left, right, mutation);
-    }
     void mutate_interval(int left, int right,const Mutation &mutation) {
       update(first+left,first+right, mutation);
     }
@@ -198,7 +208,7 @@ class IntervalTree{
     // Goes with two pointers from bottom to top, each time it finds interval whose parent covers more than interval (left, right) it will append value of this interval to rval
     // and jumps to next node that covers interval (left, right)
 
-    void comp_max(int left, int right, ValueBuilder &builder) {
+    void comp_builder(int left, int right, ValueBuilder &builder) {
       push_to(left, right);  // Why?
       recompute_to(left, right); //Why?
       while(left<right) {
@@ -222,13 +232,20 @@ class IntervalTree{
       }
     
     }
+
     void apply_builder(int left, int right, ValueBuilder &builder) {
-      comp_max(first+left, first+right,builder);
+      comp_builder(first+left, first+right,builder);
     }
+// User defined functions that instantiates concrete builders, or mutations
     int get_sum(int left, int right) {
       SumBuilder builder;
       apply_builder( left, right, builder);    
       return builder.sum;
+    }
+    // JUST calls update
+    void set_value(int left, int right, int value) {
+      SetValueMutation mutation(value);
+      mutate_interval(left, right, mutation);
     }
 };
 vector<vector<int> > edges;
