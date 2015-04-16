@@ -1,0 +1,1 @@
+tctl. Means TopCoder template library it is compact set of data strucutre and algorithm templates. With framework allowing automatic inclusion to source code (Not done yet)
