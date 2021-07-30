@@ -1,6 +1,6 @@
 #define MOD 1000000007
 #define MP(x) ((x)%MOD)
-#defie M(x) (((x)%MOD+MOD)%MOD)
+#define M(x) (((x)%MOD+MOD)%MOD)
 #define ADD(x,y) (x)=M((x)+(y))
 
 #define MUL(x,y) (x)=M((x)*(y))

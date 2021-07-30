@@ -1,8 +1,9 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
 using namespace std;
-get_suffix_array(string s, vector<int> &SA, vector<int> LCP) {
+void get_suffix_array(string s, vector<int> &SA, vector<int> &LCP) {
   int n=s.size();
   vector<int> rank(n+1);
   rank[0] = 0; //empty suffix

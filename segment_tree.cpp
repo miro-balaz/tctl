@@ -11,22 +11,21 @@ using namespace std;
 #define REP(i,n) for(int i=0;i<(int)n;++i)
 #define N 500010
 int start[N], end[N];
-inline void MV(int &a, int b) {
-  a=max(a,b);
-}
+
+//This tree is updating intervals using O_func, and querying the Q_func ()
 class IntervalTree{
   public:
     int first;  // id of first
-    vector<int> propagate,l,r,split,propagate;
+    vector<int> propagated,l,r,split,content;
     IntervalTree(int n){
       int m=1;
       while(m<n) m*=2;
       first = m-1;
       l.resize(2*m);
       r.resize(2*m);
-      propagate.resize(2*m);      
+      propagated.resize(2*m);      
       split.resize(2*m);
-      propagate.resize(2*m);
+      content.resize(2*m); // content must be initialized to neutral value for Q_func
 
       for(int i=first;i<(int)l.size();++i) {
         l[i]=r[i]=i-first;
@@ -37,44 +36,54 @@ class IntervalTree{
         split[i]=r[i*2+1];
       }
     }
-    inline void update_max(int x) {
-      propagate[x] = max(propagate[x] , ( x>=first?0:max(propagate[x*2+1], propagate[x*2+2])));
+    // propagated is basically precomputed recursion, from comp_max
+    inline void update_propagated(int x) {
+      propagated[x] = O_func(content[x] , ( x>=first?0:UP_func(propagated[x*2+1], propagated[x*2+2])));
+      
     }
+    // internal function
     void update(int x, int left, int right, int value) {
       if(left>right) return;
       if(left==l[x] && right==r[x]) {
-        propagate[x]=max(propagate[x],value);        
+        content[x]=O_func(content[x],value);        // update of interval
       } else {
         update(x*2+1, left, min(right,split[x]),value);
         update(x*2+2, max(left,split[x]+1), right,value);
       }
-      update_max(x);
+      update_propagated(x);
     }
+    // Interface function
     void set_max(int left, int right, int value) {
       update(0,left,right, value);
     }
-    inline void push(int x) {
-      //alternatilvely we could take propagate[x] + propagate[x] in each check and propagate only propagate, 
-      //and in update minimum we would had to add propagete to children, 
-      MV(propagate[x*2+1] , propagate[x]);
-      MV(propagate[x*2+2] , propagate[x]);
-      propagate[x]=0;
+    inline int O_func(int a, int b) {
+      return max(a, b);
     }
-    int comp_max(int x, int left, int right) {
-      if(left>right) return 0;
+    inline int UP_func(int a, int b) {
+      return min(a, b);
+    }
+    constexpr int UP_neutral() {
+      return 100000000;
+    }
+  
+    int comp_max(int x, int left, int right, int topcontent) {
+      if(left>right) return UP_neutral();
       if(x>=first) {        
-        return propagate[x];
+        return O_func(propagated[x],topcontent);
       }
-      if(propagate[x]) push(x);
+      
       if(left==l[x] && right==r[x]) {    
-        return propagate[x];
+        return O_func(propagated[x],topcontent);
       } else {
-        return max(comp_max(x*2+1, left, min(right,split[x])),comp_max(x*2+2, max(left,split[x]+1), right));
+       
+        return UP_func(
+          comp_max(x*2+1, left, min(right,split[x]), O_func(content[x], topcontent)),
+          comp_max(x*2+2, max(left,split[x]+1), right, O_func(content[x], topcontent)));
       }
 
     }
     int get_max(int left, int right) {
-      return comp_max(0, left, right);    
+      return comp_max(0, left, right,content[0]);    
     }
 };
 vector<vector<int> > edges;
